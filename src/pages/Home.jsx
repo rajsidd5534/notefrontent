@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { NotesAPI } from "../api"; // Make sure api.js uses Railway URL
+import { NotesAPI } from "../api";
 import NoteCard from "../components/NoteCard";
 
 export default function Home() {
@@ -12,7 +12,6 @@ export default function Home() {
     setLoading(true);
     try {
       const data = await NotesAPI.list();
-      // accept either id or _id from backend
       setNotes(data.map(n => ({ ...n, id: n.id || n._id })));
       setError("");
     } catch (err) {
@@ -45,7 +44,6 @@ export default function Home() {
         <h1>All Notes</h1>
         <Link to="/new" className="btn">+ New Note</Link>
       </div>
-
       {notes.length === 0 ? (
         <div className="empty">
           No notes yet. Click <b>New Note</b> to create one.

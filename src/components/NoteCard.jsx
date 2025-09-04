@@ -1,20 +1,20 @@
 import { Link } from "react-router-dom";
 
-export default function NoteCard({ note, onDelete, onShareToggle }) {
+export default function NoteCard({ note = {}, onDelete, onShareToggle }) {
   // Normalize MongoDB id
-  const noteId = note.id || note._id;
+  const noteId = note.id || note._id || "";
 
   // Use environment variable for frontend URL
   const shareUrl = `${import.meta.env.VITE_FRONTEND_URL || window.location.origin}/share/${noteId}`;
 
   return (
     <div className="card">
-      <h3>{note.title}</h3>
+      <h3>{note.title || "Untitled Note"}</h3>
       <div className="meta">
         {note.updatedAt ? `Updated ${new Date(note.updatedAt).toLocaleString()}` : ""}
       </div>
       <p style={{ marginTop: 10 }}>
-        {note.content ? (note.content.length > 240 ? note.content.slice(0, 240) + "…" : note.content) : ""}
+        {note.content ? (note.content.length > 240 ? note.content.slice(0, 240) + "…" : note.content) : "No content"}
       </p>
 
       <div className="actions">
