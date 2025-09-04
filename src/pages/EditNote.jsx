@@ -33,7 +33,7 @@ export default function EditNote() {
     <>
       <h1>Edit Note</h1>
       {/* Updated prop names to match the NoteForm */}
-      <NoteForm initialNote={note} onSave={handleSave} />
+    <NoteForm initial={note} onSave={handleSave} saveText="Update" />
     </>
   );
 }
