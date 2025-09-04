@@ -1,65 +1,63 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { NotesAPI } from "../api";
 import NoteCard from "../components/NoteCard";
 
 export default function Home() {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
-  async function load() {
-    setLoading(true);
-    try {
-      const data = await NotesAPI.list();
-      setNotes(data.map(n => ({ ...n, id: n.id || n._id })));
-      setError("");
-    } catch (err) {
-      console.error(err);
-      setError(err?.response?.data?.error || err.message || "Could not load notes");
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    async function fetchNotes() {
+      try {
+        const data = await NotesAPI.list();
+        // Ensure data is always an array
+        setNotes(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error("Error fetching notes:", err);
+        setNotes([]); // fallback to empty array
+      } finally {
+        setLoading(false);
+      }
     }
-  }
+    fetchNotes();
+  }, []);
 
-  useEffect(() => { load() }, []);
+  const handleDelete = async (id) => {
+    try {
+      await NotesAPI.remove(id);
+      setNotes(notes.filter(note => (note.id || note._id) !== id));
+    } catch (err) {
+      console.error("Error deleting note:", err);
+    }
+  };
 
-  async function handleDelete(id) {
-    await NotesAPI.remove(id);
-    load();
-  }
+  const handleShareToggle = async (id, share) => {
+    try {
+      const updatedNote = share
+        ? await NotesAPI.share(id)
+        : await NotesAPI.unshare(id);
+      setNotes(notes.map(note => (note.id || note._id) === id ? updatedNote : note));
+    } catch (err) {
+      console.error("Error updating share status:", err);
+    }
+  };
 
-  async function handleShareToggle(id, makePublic) {
-    if (makePublic) await NotesAPI.share(id); 
-    else await NotesAPI.unshare(id);
-    load();
-  }
-
-  if (loading) return <div className="empty">Loading notes…</div>;
-  if (error) return <div className="empty">Error: {error}</div>;
+  if (loading) return <p>Loading notes...</p>;
 
   return (
-    <>
-      <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:12}}>
-        <h1>All Notes</h1>
-        <Link to="/new" className="btn">+ New Note</Link>
-      </div>
-      {notes.length === 0 ? (
-        <div className="empty">
-          No notes yet. Click <b>New Note</b> to create one.
-        </div>
+    <div className="notes-list">
+      {Array.isArray(notes) && notes.length > 0 ? (
+        notes.map(note => (
+          <NoteCard
+            key={note.id || note._id}
+            note={note}
+            onDelete={handleDelete}
+            onShareToggle={handleShareToggle}
+          />
+        ))
       ) : (
-        <div className="grid">
-          {notes.map(note => (
-            <NoteCard 
-              key={note.id} 
-              note={note} 
-              onDelete={handleDelete} 
-              onShareToggle={handleShareToggle} 
-            />
-          ))}
-        </div>
+        <p>No notes available.</p>
       )}
-    </>
+    </div>
   );
 }
