@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { NotesAPI } from "../api";
+import { NotesAPI } from "../api"; // Make sure api.js uses Railway URL
 import NoteCard from "../components/NoteCard";
 
 export default function Home() {
@@ -12,7 +12,7 @@ export default function Home() {
     setLoading(true);
     try {
       const data = await NotesAPI.list();
-      // accept either id or _id from backend:
+      // accept either id or _id from backend
       setNotes(data.map(n => ({ ...n, id: n.id || n._id })));
       setError("");
     } catch (err) {
@@ -23,7 +23,7 @@ export default function Home() {
     }
   }
 
-  useEffect(()=>{ load() }, []);
+  useEffect(() => { load() }, []);
 
   async function handleDelete(id) {
     await NotesAPI.remove(id);
@@ -31,7 +31,8 @@ export default function Home() {
   }
 
   async function handleShareToggle(id, makePublic) {
-    if (makePublic) await NotesAPI.share(id); else await NotesAPI.unshare(id);
+    if (makePublic) await NotesAPI.share(id); 
+    else await NotesAPI.unshare(id);
     load();
   }
 
@@ -51,7 +52,14 @@ export default function Home() {
         </div>
       ) : (
         <div className="grid">
-          {notes.map(note => <NoteCard key={note.id} note={note} onDelete={handleDelete} onShareToggle={handleShareToggle} />)}
+          {notes.map(note => (
+            <NoteCard 
+              key={note.id} 
+              note={note} 
+              onDelete={handleDelete} 
+              onShareToggle={handleShareToggle} 
+            />
+          ))}
         </div>
       )}
     </>

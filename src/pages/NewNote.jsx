@@ -1,19 +1,42 @@
-import { useNavigate } from "react-router-dom";
-import { NotesAPI } from "../api";
-import NoteForm from "../components/NoteForm";
+import { useState } from "react";
 
-export default function NewNote(){
-  const nav = useNavigate();
+export default function NoteForm({ initialNote, onSave, saveText = "Save" }) {
+  const [title, setTitle] = useState(initialNote?.title || "");
+  const [content, setContent] = useState(initialNote?.content || "");
 
-  async function handleSave(payload){
-    await NotesAPI.create(payload);
-    nav("/");
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!title.trim() || !content.trim()) {
+      alert("Both title and content are required!");
+      return;
+    }
+    onSave({ title, content });
+    setTitle("");
+    setContent("");
+  };
 
   return (
-    <>
-      <h1>Create Note</h1>
-      <NoteForm onSave={handleSave} saveText="Create" />
-    </>
+    <form className="note-form" onSubmit={handleSubmit}>
+      <div>
+        <label>Title</label>
+        <input
+          type="text"
+          placeholder="Enter title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <label>Content</label>
+        <textarea
+          placeholder="Write your note..."
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
+      </div>
+
+      <button type="submit">{saveText}</button>
+    </form>
   );
 }

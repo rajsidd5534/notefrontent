@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const BASE ="notebackend-production-49e6.up.railway.app";
+// Get backend URL from environment variable
+const BASE = import.meta.env.VITE_API_URL;
 
 const api = axios.create({
   baseURL: BASE,
@@ -18,4 +19,3 @@ export const NotesAPI = {
   unshare: (id) => api.post(`/api/notes/${id}/unshare`).then(r => r.data),
   getPublic: (id) => api.get(`/api/notes/${id}/public`).then(r => r.data)
 };
-

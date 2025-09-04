@@ -117,3 +117,20 @@ nav .btn{background:var(--accent); color:white; padding:8px 12px; border-radius:
   background-color: #2563eb;
 }
 
+/* Existing .card styles */
+.card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+  transition: transform 0.2s ease, box-shadow 0.2s ease; /* Add transition here */
+}
+
+/* Hover effect */
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(2,6,23,0.6);
+}
+
+

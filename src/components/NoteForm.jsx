@@ -1,8 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function NoteForm({ initialNote, onSave }) {
   const [title, setTitle] = useState(initialNote?.title || "");
   const [content, setContent] = useState(initialNote?.content || "");
+
+  // If editing an existing note, update the state when initialNote changes
+  useEffect(() => {
+    setTitle(initialNote?.title || "");
+    setContent(initialNote?.content || "");
+  }, [initialNote]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -10,9 +16,18 @@ export default function NoteForm({ initialNote, onSave }) {
       alert("Both title and content are required!");
       return;
     }
-    onSave({ title, content });
-    setTitle("");    // clear after submit
-    setContent("");
+    // Send id if editing
+    const noteToSave = initialNote?._id
+      ? { id: initialNote._id, title, content }
+      : { title, content };
+
+    onSave(noteToSave);
+
+    // Clear fields only if creating new note
+    if (!initialNote) {
+      setTitle("");
+      setContent("");
+    }
   };
 
   return (
@@ -23,7 +38,7 @@ export default function NoteForm({ initialNote, onSave }) {
           type="text"
           placeholder="Enter title"
           value={title}
-          onChange={(e) => setTitle(e.target.value)} 
+          onChange={(e) => setTitle(e.target.value)}
         />
       </div>
 
@@ -36,7 +51,7 @@ export default function NoteForm({ initialNote, onSave }) {
         />
       </div>
 
-      <button type="submit">Create</button>
+      <button type="submit">{initialNote ? "Update" : "Create"}</button>
     </form>
   );
 }
