@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE ="notebackend-production-a660.up.railway.app";
+const BASE ="https://notebackend-production-a660.up.railway.app";
 
 const api = axios.create({
   baseURL: BASE,
