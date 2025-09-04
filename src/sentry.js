@@ -1,12 +1,8 @@
 import * as Sentry from "@sentry/react";
+import { BrowserTracing } from "@sentry/tracing";
 
 Sentry.init({
-  dsn: "https://e2c5f13f6c17b902451f67c5626717ef@o4509961722986496.ingest.de.sentry.io/4509961724952656",
-  // Setting this option to true will send default PII data to Sentry.
-  // For example, automatic IP address collection on events
-  sendDefaultPii: true
+  dsn: import.meta.env.VITE_SENTRY_DSN,
+  integrations: [new BrowserTracing()],
+  tracesSampleRate: 1.0,
 });
-
-const container = document.getElementById(“app”);
-const root = createRoot(container);
-root.render(<App />);
