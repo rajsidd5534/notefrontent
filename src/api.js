@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE = import.meta.env.VITE_API_BASE || "notebackend-production-a660.up.railway.app";
+const BASE ="notebackend-production-a660.up.railway.app";
 
 const api = axios.create({
   baseURL: BASE,
