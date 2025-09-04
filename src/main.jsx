@@ -4,8 +4,8 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./style.css";
 
-// Import Sentry
 import * as Sentry from "@sentry/react";
+import { BrowserTracing } from "@sentry/tracing";
 
 // Initialize Sentry
 Sentry.init({
