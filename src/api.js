@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Get backend URL from environment variable
-const BASE = import.meta.env.VITE_API_URL; // Ensure no quotes in .env
+const BASE = "https://notebackend-production-49e6.up.railway.app" // Ensure no quotes in .env
 
 // Create Axios instance
 const api = axios.create({
